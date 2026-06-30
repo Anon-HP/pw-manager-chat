@@ -3,11 +3,13 @@ package models
 import "time"
 
 type User struct {
-	ID           string `json:"id" db:"id"`
-	Username     string `json:"username" db:"username"`
-	Email        string `json:"email" db:"email"`
-	PasswordHash string `json:"-" db:"password_hash"`
-	// PasswordSalt string    `json:"-" db:"password_salt"`
+	ID                    string `json:"id" db:"id"`
+	Username              string `json:"username" db:"username"`
+	Email                 string `json:"email" db:"email"`
+	PasswordHash          string `json:"-" db:"password_hash"`
+	RegistrationIP        string `json:"-" db:"registration_ip"`
+	RegistrationUserAgent string `json:"-" db:"registration_user_agent"`
+	// PasswordSalt         string    `json:"-" db:"password_salt"`
 	CreatedAt time.Time `json:"created_at" db:"created_at"`
 }
 
@@ -27,4 +29,16 @@ type VaultEntry struct {
 	FileURL          *string   `json:"file_url,omitempty" db:"file_url"`
 	SizeBytes        *int64    `json:"size_bytes,omitempty" db:"size_bytes"`
 	CreatedAt        time.Time `json:"created_at" db:"created_at"`
+	UpdatedAt        time.Time `json:"updated_at" db:"updated_at"`
+}
+
+type Session struct {
+	ID           string    `json:"id"`
+	UserID       string    `json:"user_id"`
+	RefreshToken string    `json:"refresh_token"`
+	ClientIP     string    `json:"client_ip"`
+	UserAgent    string    `json:"user_agent"`
+	IsRevoked    bool      `json:"is_revoked"`
+	ExpiresAt    time.Time `json:"expires_at"`
+	CreatedAt    time.Time `json:"created_at"`
 }

@@ -15,7 +15,7 @@ import (
 )
 
 func generateVaultKeys(userID string, plainTextPassword string) (*models.UserKeys, error) {
-	privateKeyObject, err := rsa.GenerateKey(rand.Reader, 2048)
+	privateKeyObject, err := rsa.GenerateKey(rand.Reader, 4096)
 
 	if err != nil {
 		return nil, errors.New("Error: Failed To Generate RSA Keys:" + err.Error())
@@ -41,7 +41,7 @@ func generateVaultKeys(userID string, plainTextPassword string) (*models.UserKey
 		return nil, errors.New("Error: Failed To Generate Vault Salt:" + err.Error())
 	}
 
-	symmetricKeyBytes := argon2.IDKey([]byte(plainTextPassword), vaultSaltBytes, 1, 64*1024, 4, 32)
+	symmetricKeyBytes := argon2.IDKey([]byte(plainTextPassword), vaultSaltBytes, 3, 64*1024, 4, 32)
 
 	finalSaltString := base64.StdEncoding.EncodeToString(vaultSaltBytes)
 
@@ -94,7 +94,7 @@ func unlockVaultKeys(plainTextPassword string, vaultKeySaltBase64 string, encryp
 		return nil, errors.New("Error: Private Key Corrupted In Database:" + err.Error())
 	}
 
-	symmetricKeyBytes := argon2.IDKey([]byte(plainTextPassword), vaultKeySalt, 1, 64*1024, 4, 32)
+	symmetricKeyBytes := argon2.IDKey([]byte(plainTextPassword), vaultKeySalt, 3, 64*1024, 4, 32)
 
 	block, err := aes.NewCipher(symmetricKeyBytes)
 
